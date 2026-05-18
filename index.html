@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VectorVaultAI — AI Memory Infrastructure for Builders</title>
-  <meta name="description" content="Store, search, and retrieve knowledge at the speed of thought. VectorVaultAI gives your AI apps long-term memory backed by semantic vector search." />
+  <title>VectorVaultAI — Persistent Memory for AI Apps</title>
+  <meta name="description" content="Give your AI apps a memory that lasts. VectorVaultAI is the fastest, most affordable vector memory layer — 60% cheaper than Pinecone with no per-query fees." />
+  <!-- ✅ Google Analytics — replace G-XXXXXXXXXX with your real tag from analytics.google.com -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -715,6 +723,7 @@
       <a href="#features">Features</a>
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
+      <a href="docs.html">Docs</a>
       <a href="#waitlist" class="nav-cta">Get Early Access →</a>
     </div>
   </nav>
@@ -724,12 +733,12 @@
     <div class="hero-glow"></div>
     <div class="hero-badge"><span class="dot"></span>Now in Private Beta</div>
     <h1>
-      The Memory Layer<br />
-      Your <span class="gradient-text">AI Apps</span> Were Missing
+      Your AI Forgets.<br />
+      <span class="gradient-text">VectorVaultAI</span> Remembers.
     </h1>
     <p class="hero-sub">
-      Store, search, and retrieve knowledge at the speed of thought.
-      VectorVaultAI gives your AI agents persistent, semantic memory — with one API.
+      The fastest, most affordable vector memory layer for AI apps.
+      Store anything. Recall by meaning. Ship in minutes — not weeks.
     </p>
     <div class="hero-actions">
       <a href="#waitlist" class="btn-primary">Start Building Free →</a>
@@ -968,18 +977,51 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CTA / MAILCHIMP WAITLIST -->
   <div class="cta-section" id="waitlist">
     <div class="cta-box">
       <h2>Give your AI a<br /><span class="gradient-text">memory it keeps</span></h2>
-      <p>Join the waitlist and get early access + 3 months of Pro free.</p>
-      <div class="cta-input-row">
-        <input type="email" class="cta-input" placeholder="your@email.com" />
-        <button class="btn-primary" style="white-space:nowrap;padding:0.85rem 1.5rem;">Join Waitlist</button>
+      <p>Join the waitlist — early access + 3 months of Pro free.</p>
+
+      <!--
+        MAILCHIMP FORM SETUP:
+        1. Go to mailchimp.com → Audience → Signup forms → Embedded forms
+        2. Copy your form action URL (looks like https://xxxxx.us21.list-manage.com/subscribe/post?u=XXX&id=XXX)
+        3. Replace the action URL below with yours
+      -->
+      <form
+        action="https://YOUR_MAILCHIMP_FORM_ACTION_URL"
+        method="post"
+        target="_blank"
+        onsubmit="handleWaitlist(event)"
+        style="position:relative;"
+      >
+        <!-- Mailchimp hidden bot field — do not remove -->
+        <div style="position:absolute;left:-5000px;" aria-hidden="true">
+          <input type="text" name="b_PLACEHOLDER_u_PLACEHOLDER_id" tabindex="-1" value="" />
+        </div>
+        <div class="cta-input-row">
+          <input type="email" name="EMAIL" class="cta-input" placeholder="your@email.com" required />
+          <button type="submit" class="btn-primary" style="white-space:nowrap;padding:0.85rem 1.5rem;">Join Waitlist →</button>
+        </div>
+      </form>
+
+      <div id="waitlist-success" style="display:none;margin-top:1rem;color:#34d399;font-size:0.9rem;font-weight:600;">
+        🎉 You're on the list! We'll be in touch.
       </div>
       <p style="font-size:0.78rem;margin-top:1rem;color:var(--muted);">No spam. Unsubscribe anytime. 🔒</p>
     </div>
   </div>
+
+  <script>
+    function handleWaitlist(e) {
+      // Show success message after short delay (Mailchimp opens in new tab)
+      setTimeout(() => {
+        document.getElementById('waitlist-success').style.display = 'block';
+        e.target.reset();
+      }, 500);
+    }
+  </script>
 
   <!-- FOOTER -->
   <footer>
@@ -987,7 +1029,7 @@
     <nav>
       <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
-      <a href="#how">Docs</a>
+      <a href="docs.html">Docs</a>
       <a href="mailto:hello@vectorvaultai.com">Contact</a>
     </nav>
     <p>© 2026 VectorVaultAI. All rights reserved.</p>

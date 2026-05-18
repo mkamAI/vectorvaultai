@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docs — VectorVaultAI</title>
+  <meta name="description" content="VectorVaultAI documentation. Get started with the memory API in minutes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- ✅ Google Analytics — replace G-XXXXXXXXXX with your real tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #040810; --card: #0d1829; --border: rgba(99,179,237,0.12);
+      --blue: #3b82f6; --violet: #8b5cf6; --text: #e2e8f0; --muted: #64748b; --dim: #94a3b8;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 64px;
+      background: rgba(4,8,16,0.9); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700;
+      background: linear-gradient(120deg, #60a5fa, #a78bfa); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a { color: var(--dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-cta { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff !important;
+      padding: 0.45rem 1.1rem; border-radius: 8px; font-size: 0.85rem !important; }
+
+    .layout { display: flex; max-width: 1200px; margin: 0 auto; padding-top: 64px; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px; flex-shrink: 0; padding: 2.5rem 1.5rem;
+      border-right: 1px solid var(--border); position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto;
+    }
+    .sidebar-section { margin-bottom: 2rem; }
+    .sidebar-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.6rem; }
+    .sidebar a { display: block; padding: 0.4rem 0.75rem; border-radius: 8px; color: var(--dim);
+      text-decoration: none; font-size: 0.88rem; transition: background 0.15s, color 0.15s; }
+    .sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .sidebar a.active { background: rgba(59,130,246,0.1); color: #60a5fa; }
+
+    /* Main content */
+    .content { flex: 1; padding: 3rem 3rem 5rem; max-width: 760px; }
+    .content h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700;
+      letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .content h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 600;
+      letter-spacing: -0.02em; margin: 2.5rem 0 0.75rem; padding-top: 2.5rem;
+      border-top: 1px solid var(--border); }
+    .content h2:first-of-type { margin-top: 2rem; border-top: none; padding-top: 0; }
+    .content h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 600;
+      margin: 1.5rem 0 0.5rem; color: var(--text); }
+    .content p { color: var(--dim); margin-bottom: 1rem; font-size: 0.95rem; }
+    .content ul { color: var(--dim); padding-left: 1.5rem; margin-bottom: 1rem; font-size: 0.95rem; }
+    .content ul li { margin-bottom: 0.35rem; }
+    .lead { font-size: 1.05rem !important; color: var(--dim); margin-bottom: 2rem !important; }
+
+    /* Code blocks */
+    pre {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1rem 0 1.5rem; position: relative;
+    }
+    code { font-family: 'Courier New', monospace; font-size: 0.85rem; }
+    pre code { color: #e2e8f0; }
+    .inline-code {
+      background: rgba(255,255,255,0.07); border: 1px solid var(--border);
+      padding: 0.15rem 0.45rem; border-radius: 5px; font-family: monospace; font-size: 0.82rem; color: #a78bfa;
+    }
+    .comment { color: #4a5568; }
+    .keyword { color: #a78bfa; }
+    .fn { color: #60a5fa; }
+    .str { color: #34d399; }
+    .var { color: #f9a8d4; }
+    .num { color: #fb923c; }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.25rem 0.7rem; border-radius: 100px; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .badge-blue { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+    .badge-green { background: rgba(52,211,153,0.1); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+
+    /* Method cards */
+    .method {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.25rem 1.5rem; margin-bottom: 1rem;
+    }
+    .method-sig { font-family: monospace; font-size: 0.9rem; color: #60a5fa; margin-bottom: 0.5rem; }
+    .method p { margin-bottom: 0; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.88rem; }
+    th { background: var(--card); border: 1px solid var(--border); padding: 0.6rem 1rem;
+      text-align: left; font-weight: 600; color: var(--dim); }
+    td { border: 1px solid var(--border); padding: 0.6rem 1rem; color: var(--dim); }
+    td code { color: #a78bfa; font-family: monospace; }
+
+    /* Callout */
+    .callout {
+      border-left: 3px solid var(--blue); background: rgba(59,130,246,0.06);
+      border-radius: 0 10px 10px 0; padding: 1rem 1.25rem; margin: 1.5rem 0;
+    }
+    .callout p { margin: 0; font-size: 0.9rem; }
+
+    @media(max-width:768px) {
+      .sidebar { display: none; }
+      .content { padding: 2rem 1.25rem; }
+      nav .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">⬡ VectorVaultAI</a>
+  <div class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="docs.html" class="active">Docs</a>
+    <a href="index.html#waitlist" class="nav-cta">Get Early Access →</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Getting Started</div>
+      <a href="#quickstart" class="active">Quickstart</a>
+      <a href="#install">Installation</a>
+      <a href="#authentication">Authentication</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Core API</div>
+      <a href="#remember">vault.remember()</a>
+      <a href="#recall">vault.recall()</a>
+      <a href="#forget">vault.forget()</a>
+      <a href="#namespaces">Namespaces</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Guides</div>
+      <a href="#langchain">LangChain Integration</a>
+      <a href="#openai">OpenAI Agents</a>
+      <a href="#metadata">Tags & Metadata</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Reference</div>
+      <a href="#limits">Limits & Quotas</a>
+      <a href="#errors">Error Codes</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <div class="badge badge-blue">Documentation</div>
+    <h1>VectorVaultAI Docs</h1>
+    <p class="lead">Everything you need to add persistent semantic memory to your AI app — in under 10 minutes.</p>
+
+    <!-- QUICKSTART -->
+    <h2 id="quickstart">Quickstart</h2>
+    <p>The fastest way to get started. Store a memory, retrieve it by meaning.</p>
+    <pre><code><span class="comment"># 1. Install</span>
+pip install vectorvaultai
+
+<span class="comment"># 2. Store a memory</span>
+<span class="keyword">from</span> <span class="var">vectorvaultai</span> <span class="keyword">import</span> <span class="fn">VaultClient</span>
+
+<span class="var">vault</span> = <span class="fn">VaultClient</span>(api_key=<span class="str">"vv_your_api_key"</span>)
+
+<span class="var">vault</span>.<span class="fn">remember</span>(
+    <span class="str">"User prefers dark mode and concise responses"</span>,
+    tags=[<span class="str">"preferences"</span>, <span class="str">"ui"</span>]
+)
+
+<span class="comment"># 3. Recall semantically similar memories</span>
+<span class="var">results</span> = <span class="var">vault</span>.<span class="fn">recall</span>(<span class="str">"What does this user like?"</span>)
+<span class="keyword">print</span>(<span class="var">results</span>[<span class="num">0</span>][<span class="str">'content'</span>])
+<span class="comment"># → "User prefers dark mode and concise responses"</span></code></pre>
+
+    <!-- INSTALL -->
+    <h2 id="install">Installation</h2>
+    <h3>Python</h3>
+    <pre><code>pip install vectorvaultai</code></pre>
+    <h3>TypeScript / Node</h3>
+    <pre><code>npm install vectorvaultai</code></pre>
+    <h3>REST API</h3>
+    <p>All endpoints are available at <span class="inline-code">https://api.vectorvaultai.com/v1</span> — no SDK required.</p>
+
+    <!-- AUTH -->
+    <h2 id="authentication">Authentication</h2>
+    <p>All requests require an API key passed as a header or in the client constructor.</p>
+    <pre><code><span class="comment"># Python</span>
+<span class="var">vault</span> = <span class="fn">VaultClient</span>(api_key=<span class="str">"vv_your_api_key"</span>)
+
+<span class="comment"># TypeScript</span>
+<span class="keyword">import</span> { <span class="fn">VaultClient</span> } <span class="keyword">from</span> <span class="str">'vectorvaultai'</span>
+<span class="keyword">const</span> <span class="var">vault</span> = <span class="keyword">new</span> <span class="fn">VaultClient</span>({ apiKey: <span class="str">'vv_your_api_key'</span> })
+
+<span class="comment"># REST</span>
+curl https://api.vectorvaultai.com/v1/recall \
+  -H <span class="str">"Authorization: Bearer vv_your_api_key"</span> \
+  -d '{"query": "user preferences"}'</code></pre>
+
+    <div class="callout">
+      <p>🔑 Get your API key from the <a href="index.html#waitlist" style="color:#60a5fa;">early access waitlist</a>. Keys are issued during private beta.</p>
+    </div>
+
+    <!-- REMEMBER -->
+    <h2 id="remember">vault.remember()</h2>
+    <p>Store any text as a memory. It gets embedded and indexed automatically.</p>
+    <div class="method">
+      <div class="method-sig">vault.remember(content, tags=[], namespace="default", metadata={})</div>
+      <p>Returns a memory ID string.</p>
+    </div>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>content</code></td><td>string</td><td>The text to store</td></tr>
+      <tr><td><code>tags</code></td><td>string[]</td><td>Optional labels for filtering recalls</td></tr>
+      <tr><td><code>namespace</code></td><td>string</td><td>Isolate memories by user, session, or agent</td></tr>
+      <tr><td><code>metadata</code></td><td>object</td><td>Any JSON-serializable data to attach</td></tr>
+    </table>
+    <pre><code><span class="var">memory_id</span> = <span class="var">vault</span>.<span class="fn">remember</span>(
+    <span class="str">"User completed onboarding on 2026-05-17"</span>,
+    tags=[<span class="str">"onboarding"</span>, <span class="str">"milestone"</span>],
+    namespace=<span class="str">"user_42"</span>,
+    metadata={ <span class="str">"user_id"</span>: <span class="num">42</span>, <span class="str">"plan"</span>: <span class="str">"pro"</span> }
+)</code></pre>
+
+    <!-- RECALL -->
+    <h2 id="recall">vault.recall()</h2>
+    <p>Retrieve the most semantically similar memories to a natural language query.</p>
+    <div class="method">
+      <div class="method-sig">vault.recall(query, top_k=5, namespace="default", tags=[])</div>
+      <p>Returns a list of memory objects sorted by similarity score.</p>
+    </div>
+    <pre><code><span class="var">results</span> = <span class="var">vault</span>.<span class="fn">recall</span>(
+    <span class="str">"What has this user done so far?"</span>,
+    top_k=<span class="num">3</span>,
+    namespace=<span class="str">"user_42"</span>
+)
+
+<span class="keyword">for</span> <span class="var">r</span> <span class="keyword">in</span> <span class="var">results</span>:
+    <span class="keyword">print</span>(<span class="var">r</span>[<span class="str">'content'</span>], <span class="str">"→ score:"</span>, <span class="var">r</span>[<span class="str">'score'</span>])
+<span class="comment"># "User completed onboarding on 2026-05-17" → score: 0.94</span></code></pre>
+
+    <!-- FORGET -->
+    <h2 id="forget">vault.forget()</h2>
+    <p>Delete a specific memory by ID, or clear all memories in a namespace.</p>
+    <pre><code><span class="comment"># Delete one memory</span>
+<span class="var">vault</span>.<span class="fn">forget</span>(memory_id=<span class="str">"mem_abc123"</span>)
+
+<span class="comment"># Clear an entire namespace</span>
+<span class="var">vault</span>.<span class="fn">forget</span>(namespace=<span class="str">"user_42"</span>)</code></pre>
+
+    <!-- NAMESPACES -->
+    <h2 id="namespaces">Namespaces</h2>
+    <p>Namespaces isolate memories so they don't bleed between users, sessions, or agents. Always use them in production.</p>
+    <pre><code><span class="comment"># Per-user namespace</span>
+<span class="var">vault</span>.<span class="fn">remember</span>(<span class="str">"..."</span>, namespace=<span class="str">f"user_{user_id}"</span>)
+
+<span class="comment"># Per-session namespace</span>
+<span class="var">vault</span>.<span class="fn">remember</span>(<span class="str">"..."</span>, namespace=<span class="str">f"session_{session_id}"</span>)
+
+<span class="comment"># Per-agent namespace</span>
+<span class="var">vault</span>.<span class="fn">remember</span>(<span class="str">"..."</span>, namespace=<span class="str">"agent_support_bot"</span>)</code></pre>
+
+    <!-- LANGCHAIN -->
+    <h2 id="langchain">LangChain Integration</h2>
+    <p>Drop VectorVaultAI in as a LangChain memory backend with one line.</p>
+    <pre><code><span class="keyword">from</span> <span class="var">vectorvaultai.integrations</span> <span class="keyword">import</span> <span class="fn">VaultMemory</span>
+<span class="keyword">from</span> <span class="var">langchain.chains</span> <span class="keyword">import</span> <span class="fn">ConversationChain</span>
+
+<span class="var">memory</span> = <span class="fn">VaultMemory</span>(api_key=<span class="str">"vv_your_key"</span>, namespace=<span class="str">"user_42"</span>)
+
+<span class="var">chain</span> = <span class="fn">ConversationChain</span>(
+    llm=<span class="var">your_llm</span>,
+    memory=<span class="var">memory</span>
+)
+<span class="comment"># Memories persist automatically across sessions ✅</span></code></pre>
+
+    <!-- OPENAI -->
+    <h2 id="openai">OpenAI Agents</h2>
+    <p>Inject recalled memories into your system prompt before each call.</p>
+    <pre><code><span class="keyword">import</span> <span class="var">openai</span>
+
+<span class="var">memories</span> = <span class="var">vault</span>.<span class="fn">recall</span>(<span class="var">user_message</span>, namespace=<span class="str">f"user_{user_id}"</span>)
+<span class="var">memory_context</span> = <span class="str">"\n"</span>.<span class="fn">join</span>([<span class="var">m</span>[<span class="str">'content'</span>] <span class="keyword">for</span> <span class="var">m</span> <span class="keyword">in</span> <span class="var">memories</span>])
+
+<span class="var">response</span> = <span class="var">openai</span>.<span class="var">chat</span>.<span class="var">completions</span>.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[
+        { <span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: <span class="str">f"What you know about this user:\n{memory_context}"</span> },
+        { <span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="var">user_message</span> }
+    ]
+)</code></pre>
+
+    <!-- LIMITS -->
+    <h2 id="limits">Limits & Quotas</h2>
+    <table>
+      <tr><th>Plan</th><th>Vectors</th><th>Recalls/mo</th><th>Namespaces</th></tr>
+      <tr><td>Starter</td><td>1M</td><td>100K</td><td>3</td></tr>
+      <tr><td>Pro</td><td>10M</td><td>Unlimited</td><td>Unlimited</td></tr>
+      <tr><td>Enterprise</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+    </table>
+
+    <!-- ERRORS -->
+    <h2 id="errors">Error Codes</h2>
+    <table>
+      <tr><th>Code</th><th>Meaning</th></tr>
+      <tr><td><code>401</code></td><td>Invalid or missing API key</td></tr>
+      <tr><td><code>429</code></td><td>Rate limit exceeded</td></tr>
+      <tr><td><code>507</code></td><td>Vector quota exceeded — upgrade your plan</td></tr>
+      <tr><td><code>500</code></td><td>Internal server error — contact support</td></tr>
+    </table>
+
+    <div class="callout">
+      <p>🚧 VectorVaultAI is in private beta. APIs may change before general availability. <a href="index.html#waitlist" style="color:#60a5fa;">Join the waitlist</a> to get notified.</p>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
