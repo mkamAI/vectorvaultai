@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VectorVaultAI — AI Memory Infrastructure for Builders</title>
+  <meta name="description" content="Store, search, and retrieve knowledge at the speed of thought. VectorVaultAI gives your AI apps long-term memory backed by semantic vector search." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #040810;
+      --bg2: #080f1e;
+      --card: #0d1829;
+      --border: rgba(99,179,237,0.12);
+      --blue: #3b82f6;
+      --violet: #8b5cf6;
+      --cyan: #06b6d4;
+      --teal: #14b8a6;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(4,8,16,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      background: linear-gradient(120deg, #60a5fa, #a78bfa, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #fff !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.85rem !important;
+      font-weight: 600 !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 500px;
+      background: radial-gradient(ellipse at center,
+        rgba(59,130,246,0.18) 0%,
+        rgba(139,92,246,0.10) 40%,
+        transparent 70%);
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #93c5fd;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: #3b82f6;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.5; transform:scale(1.4); }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, #60a5fa 0%, #a78bfa 50%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--dim);
+      max-width: 620px;
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 40px rgba(59,130,246,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 50px rgba(59,130,246,0.45);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--dim);
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--blue); color: var(--text); }
+
+    /* hero code card */
+    .hero-code {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      text-align: left;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      max-width: 620px;
+      width: 100%;
+      position: relative;
+    }
+    .hero-code .bar {
+      display: flex; gap: 6px; margin-bottom: 1rem;
+    }
+    .hero-code .bar span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .hero-code .bar .r { background:#ff5f57; }
+    .hero-code .bar .y { background:#febc2e; }
+    .hero-code .bar .g { background:#28c840; }
+    .comment { color: #4a5568; }
+    .keyword { color: #a78bfa; }
+    .fn { color: #60a5fa; }
+    .str { color: #34d399; }
+    .var { color: #f9a8d4; }
+
+    /* ─── LOGOS / SOCIAL PROOF ─── */
+    .social-proof {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .social-proof p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .logo-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      opacity: 0.4;
+    }
+    .logo-row span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dim);
+      letter-spacing: -0.02em;
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+    .section-sub {
+      color: var(--dim);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin-bottom: 3.5rem;
+    }
+
+    /* ─── FEATURES ─── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover { border-color: rgba(99,179,237,0.3); transform: translateY(-4px); }
+    .feature-card:hover::before { opacity: 1; }
+
+    .fc-blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .fc-violet::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .fc-teal::before { background: linear-gradient(90deg, #14b8a6, #06b6d4); }
+    .fc-pink::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    .fc-amber::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .fc-green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+    }
+    .fi-blue { background: rgba(59,130,246,0.15); }
+    .fi-violet { background: rgba(139,92,246,0.15); }
+    .fi-teal { background: rgba(20,184,166,0.15); }
+    .fi-pink { background: rgba(236,72,153,0.15); }
+    .fi-amber { background: rgba(245,158,11,0.15); }
+    .fi-green { background: rgba(16,185,129,0.15); }
+
+    .feature-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+    .feature-card p { color: var(--dim); font-size: 0.92rem; line-height: 1.6; }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    @media(max-width:768px) {
+      .how-wrapper { grid-template-columns:1fr; gap:3rem; }
+    }
+    .steps { display: flex; flex-direction: column; gap: 2rem; }
+    .step {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .step h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+    .step p { color: var(--dim); font-size: 0.9rem; }
+
+    /* visual panel */
+    .how-visual {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .how-visual .glow-orb {
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.2), transparent 70%);
+      top: -50px; right: -50px;
+      filter: blur(30px);
+    }
+    .memory-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .mi-icon { font-size: 1.1rem; flex-shrink: 0; margin-top:2px; }
+    .mi-body { flex: 1; }
+    .mi-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.2rem;
+    }
+    .mi-label.blue { color: #60a5fa; }
+    .mi-label.violet { color: #a78bfa; }
+    .mi-label.teal { color: #2dd4bf; }
+    .mi-text { font-size: 0.83rem; color: var(--dim); }
+    .similarity {
+      font-size: 0.72rem;
+      color: #34d399;
+      font-weight: 600;
+      background: rgba(52,211,153,0.1);
+      border-radius: 6px;
+      padding: 0.15rem 0.5rem;
+      align-self: center;
+      white-space: nowrap;
+    }
+    .search-bar {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      font-family: monospace;
+      font-size: 0.82rem;
+      color: var(--dim);
+    }
+    .search-bar .cursor {
+      display: inline-block;
+      width: 2px; height: 14px;
+      background: var(--blue);
+      animation: blink 1s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ─── STATS ─── */
+    .stats-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .stat-item {
+      padding: 2.5rem 2rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      background: linear-gradient(120deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { color: var(--dim); font-size: 0.88rem; }
+
+    /* ─── PRICING ─── */
+    #pricing { background: transparent; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: transform 0.3s;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.featured {
+      border-color: rgba(59,130,246,0.5);
+      background: linear-gradient(160deg, rgba(59,130,246,0.08) 0%, var(--card) 60%);
+    }
+    .popular-badge {
+      position: absolute;
+      top: -12px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.25rem 1rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .plan-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--dim);
+      margin-bottom: 0.5rem;
+    }
+    .plan-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .plan-price span { font-size: 1rem; color: var(--dim); }
+    .plan-desc { color: var(--dim); font-size: 0.88rem; margin-bottom: 2rem; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+    .plan-features li {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.9rem; color: var(--dim);
+    }
+    .plan-features li::before { content: '✓'; color: #34d399; font-weight: 700; }
+
+    .btn-plan {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 0.8rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn-plan:hover { transform: translateY(-1px); opacity: 0.9; }
+    .btn-plan-primary { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; }
+    .btn-plan-secondary { background: transparent; border: 1px solid var(--border); color: var(--dim); }
+
+    /* ─── AWS BADGE ─── */
+    .aws-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: linear-gradient(135deg, rgba(255,153,0,0.08), rgba(255,153,0,0.04));
+      border: 1px solid rgba(255,153,0,0.25);
+      border-radius: 12px;
+      padding: 0.9rem 1.5rem;
+      margin: 0 auto 3.5rem;
+      max-width: 520px;
+      flex-wrap: wrap;
+    }
+    .aws-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #ff9900;
+      letter-spacing: -0.01em;
+    }
+    .aws-logo svg { flex-shrink: 0; }
+    .aws-banner-text { font-size: 0.88rem; color: var(--dim); }
+    .aws-soon {
+      background: rgba(255,153,0,0.15);
+      color: #ff9900;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255,153,0,0.3);
+    }
+
+    /* ─── COMPETITOR COMPARE ─── */
+    .compare-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .compare-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      color: var(--dim);
+    }
+    .compare-pill strong { color: var(--text); }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+    .cta-box {
+      background: linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(139,92,246,0.12) 100%);
+      border: 1px solid rgba(99,179,237,0.2);
+      border-radius: 20px;
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.15), transparent 70%);
+      filter: blur(50px);
+    }
+    .cta-box h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .cta-box p { color: var(--dim); font-size: 1.05rem; margin-bottom: 2rem; position: relative; }
+    .cta-input-row {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 460px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .cta-input {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 0.85rem 1.2rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .cta-input::placeholder { color: var(--muted); }
+    .cta-input:focus { border-color: var(--blue); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    footer .logo-sm {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      background: linear-gradient(120deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    footer nav { display: flex; gap: 1.5rem; border: none; position: static; height: auto; background: none; backdrop-filter: none; padding: 0; }
+    footer nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    footer nav a:hover { color: var(--dim); }
+    footer p { color: var(--muted); font-size: 0.82rem; }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:600px) {
+      .nav-links { display: none; }
+      .hero-code { font-size: 0.75rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stat-item:nth-child(2) { border-right: none; }
+      footer { flex-direction: column; text-align: center; }
+      footer nav { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">⬡ VectorVaultAI</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#waitlist" class="nav-cta">Get Early Access →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-badge"><span class="dot"></span>Now in Private Beta</div>
+    <h1>
+      The Memory Layer<br />
+      Your <span class="gradient-text">AI Apps</span> Were Missing
+    </h1>
+    <p class="hero-sub">
+      Store, search, and retrieve knowledge at the speed of thought.
+      VectorVaultAI gives your AI agents persistent, semantic memory — with one API.
+    </p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn-primary">Start Building Free →</a>
+      <a href="#how" class="btn-secondary">See how it works</a>
+    </div>
+
+    <div class="hero-code">
+      <div class="bar">
+        <span class="r"></span><span class="y"></span><span class="g"></span>
+      </div>
+      <span class="comment"># Store any knowledge in seconds</span><br />
+      <span class="keyword">from</span> <span class="var">vectorvault</span> <span class="keyword">import</span> <span class="fn">VaultClient</span><br /><br />
+      <span class="var">vault</span> = <span class="fn">VaultClient</span>(<span class="str">api_key="vv_..."</span>)<br /><br />
+      <span class="comment"># Save a memory</span><br />
+      <span class="var">vault</span>.<span class="fn">remember</span>(<br />
+      &nbsp;&nbsp;<span class="str">"User prefers dark mode and concise responses"</span>,<br />
+      &nbsp;&nbsp;tags=[<span class="str">"preferences"</span>, <span class="str">"ui"</span>]<br />
+      )<br /><br />
+      <span class="comment"># Retrieve semantically similar memories</span><br />
+      <span class="var">results</span> = <span class="var">vault</span>.<span class="fn">recall</span>(<span class="str">"user interface preferences"</span>)<br />
+      <span class="comment"># → [{"content": "User prefers dark mode...", "score": 0.97}]</span>
+    </div>
+  </div>
+
+  <!-- SOCIAL PROOF -->
+  <div class="social-proof">
+    <p>Trusted by builders at</p>
+    <div class="logo-row">
+      <span>Notion</span>
+      <span>Vercel</span>
+      <span>Stripe</span>
+      <span>Linear</span>
+      <span>Figma</span>
+      <span>Supabase</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything your AI needs<br /><span class="gradient-text">to remember</span></h2>
+    <p class="section-sub">Built for developers who want semantic memory in their apps without managing vector databases.</p>
+
+    <div class="features-grid">
+      <div class="feature-card fc-blue">
+        <div class="feature-icon fi-blue">🧠</div>
+        <h3>Semantic Vector Search</h3>
+        <p>Search by meaning, not keywords. Find the exact context your AI needs using high-dimensional embeddings and cosine similarity.</p>
+      </div>
+      <div class="feature-card fc-violet">
+        <div class="feature-icon fi-violet">⚡</div>
+        <h3>Sub-10ms Retrieval</h3>
+        <p>Optimized pgvector indexes and intelligent caching deliver recall in milliseconds — even at millions of stored memories.</p>
+      </div>
+      <div class="feature-card fc-teal">
+        <div class="feature-icon fi-teal">🔒</div>
+        <h3>Namespaced & Isolated</h3>
+        <p>Every user, session, and agent gets its own memory namespace. No cross-contamination. Enterprise-grade data isolation built in.</p>
+      </div>
+      <div class="feature-card fc-green">
+        <div class="feature-icon fi-green">🔌</div>
+        <h3>Drop-in SDK</h3>
+        <p>Python, TypeScript, and REST. Add persistent memory to LangChain, LlamaIndex, or any custom agent in under 10 lines of code.</p>
+      </div>
+      <div class="feature-card fc-pink">
+        <div class="feature-icon fi-pink">🏷️</div>
+        <h3>Rich Metadata & Tags</h3>
+        <p>Tag, timestamp, and annotate every memory. Filter recalls by project, type, date range, or custom metadata fields.</p>
+      </div>
+      <div class="feature-card fc-amber">
+        <div class="feature-icon fi-amber">📊</div>
+        <h3>Memory Analytics</h3>
+        <p>Track what your AI remembers, how often it recalls, and which memories matter most — with a real-time dashboard.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">10ms</div>
+        <div class="stat-label">Avg. recall latency</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">99.9%</div>
+        <div class="stat-label">Uptime SLA</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1B+</div>
+        <div class="stat-label">Vectors supported</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3 lines</div>
+        <div class="stat-label">To add memory to any app</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="how-wrapper">
+      <div>
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Memory for AI,<br /><span class="gradient-text">made simple</span></h2>
+        <p class="section-sub">Three primitives. Infinite possibilities.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h4>Store any knowledge</h4>
+              <p>Call <code style="color:#60a5fa;font-size:0.85em">vault.remember()</code> with text, metadata, and tags. We embed and index it automatically.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h4>Recall by meaning</h4>
+              <p>Ask <code style="color:#60a5fa;font-size:0.85em">vault.recall("query")</code> and get back the most semantically similar memories — ranked by relevance.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h4>Inject into context</h4>
+              <p>Feed recalled memories directly into your LLM's system prompt. Your AI now knows what it needs to know — every time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual">
+        <div class="glow-orb"></div>
+        <div class="search-bar">
+          🔍 &nbsp;"user dashboard preferences"<span class="cursor"></span>
+        </div>
+        <div class="memory-item">
+          <div class="mi-icon">💡</div>
+          <div class="mi-body">
+            <div class="mi-label blue">Decision</div>
+            <div class="mi-text">User prefers dark mode and compact card layout on dashboard</div>
+          </div>
+          <div class="similarity">0.97</div>
+        </div>
+        <div class="memory-item">
+          <div class="mi-icon">📌</div>
+          <div class="mi-body">
+            <div class="mi-label violet">Rule</div>
+            <div class="mi-text">Always show analytics charts by default on the main view</div>
+          </div>
+          <div class="similarity">0.91</div>
+        </div>
+        <div class="memory-item">
+          <div class="mi-icon">🗂️</div>
+          <div class="mi-body">
+            <div class="mi-label teal">Context</div>
+            <div class="mi-text">User has 3 active projects — skips onboarding wizard each time</div>
+          </div>
+          <div class="similarity">0.87</div>
+        </div>
+        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--muted);">
+          3 memories recalled · 8ms · vectorvaultai.com
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" style="max-width:100%;padding:5rem 2rem;">
+    <div style="max-width:1200px;margin:0 auto;text-align:center;margin-bottom:2rem;">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Up to 60% less than competitors</h2>
+      <p class="section-sub" style="margin:0 auto 2rem;">No per-query fees. No hidden egress costs. Just straightforward storage-based pricing.</p>
+
+      <!-- Competitor compare pills -->
+      <div class="compare-row">
+        <span class="compare-pill">Pinecone <strong>~$70/mo</strong> per 10M vectors</span>
+        <span class="compare-pill">Weaviate <strong>~$135/mo</strong> per 10M vectors</span>
+        <span class="compare-pill">Qdrant <strong>~$65/mo</strong> per 10M vectors</span>
+      </div>
+
+      <!-- AWS Marketplace banner -->
+      <div class="aws-banner">
+        <div class="aws-logo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#ff9900"><path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.064.056.128.056.184 0 .08-.048.16-.152.24l-.504.336a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.24-.112a2.473 2.473 0 0 1-.288-.376 6.18 6.18 0 0 1-.248-.472c-.624.736-1.408 1.104-2.352 1.104-.672 0-1.208-.192-1.6-.576-.392-.384-.592-.896-.592-1.536 0-.68.24-1.232.728-1.648.488-.416 1.136-.624 1.96-.624.272 0 .552.024.848.064.296.04.6.104.92.176v-.584c0-.608-.128-1.032-.376-1.28-.256-.248-.688-.368-1.304-.368-.28 0-.568.032-.864.104a6.388 6.388 0 0 0-.864.272 2.294 2.294 0 0 1-.28.104.488.488 0 0 1-.128.024c-.112 0-.168-.08-.168-.248v-.392c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.168c.28-.144.616-.264 1.008-.36A4.84 4.84 0 0 1 4.8 6.2c.936 0 1.624.208 2.072.624.44.416.664 1.048.664 1.896v2.496l-.773.816zm3.302 0c0 .296.032.535.088.71.064.176.144.368.256.576.04.064.056.128.056.184 0 .08-.048.16-.152.24l-.504.336a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.24-.112a2.473 2.473 0 0 1-.288-.376 6.18 6.18 0 0 1-.248-.472c-.624.736-1.408 1.104-2.352 1.104-.672 0-1.208-.192-1.6-.576-.392-.384-.592-.896-.592-1.536 0-.68.24-1.232.728-1.648.488-.416 1.136-.624 1.96-.624.272 0 .552.024.848.064.296.04.6.104.92.176v-.584c0-.608-.128-1.032-.376-1.28-.256-.248-.688-.368-1.304-.368-.28 0-.568.032-.864.104a6.388 6.388 0 0 0-.864.272 2.294 2.294 0 0 1-.28.104.488.488 0 0 1-.128.024c-.112 0-.168-.08-.168-.248v-.392c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.168c.28-.144.616-.264 1.008-.36A4.84 4.84 0 0 1 8.1 6.2c.936 0 1.624.208 2.072.624.44.416.664 1.048.664 1.896v2.496l-.771.816z"/></svg>
+          AWS Marketplace
+        </div>
+        <div class="aws-banner-text">Deploy directly into your AWS account — VPC, IAM, and all.</div>
+        <div class="aws-soon">Coming Soon</div>
+      </div>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$0 <span>/ mo</span></div>
+        <div class="plan-desc">Build and experiment. No credit card required.</div>
+        <ul class="plan-features">
+          <li>1M vectors stored</li>
+          <li>100K recalls / month</li>
+          <li>3 namespaces</li>
+          <li>Python & REST SDK</li>
+          <li>Community support</li>
+        </ul>
+        <a href="#waitlist" class="btn-plan btn-plan-secondary">Get Started Free</a>
+      </div>
+      <div class="price-card featured">
+        <div class="popular-badge">Most Popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$39 <span>/ mo</span></div>
+        <div class="plan-desc">Production-ready. ~40% less than Pinecone or Qdrant.</div>
+        <ul class="plan-features">
+          <li>10M vectors stored</li>
+          <li>Unlimited recalls</li>
+          <li>Unlimited namespaces</li>
+          <li>TypeScript + Python SDKs</li>
+          <li>Analytics dashboard</li>
+          <li>No per-query fees</li>
+          <li>Priority email support</li>
+        </ul>
+        <a href="#waitlist" class="btn-plan btn-plan-primary">Start Pro Trial →</a>
+      </div>
+      <div class="price-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price">Custom</div>
+        <div class="plan-desc">Dedicated infrastructure, SLAs, and AWS Marketplace billing.</div>
+        <ul class="plan-features">
+          <li>Unlimited vectors</li>
+          <li>Dedicated cluster</li>
+          <li>SSO & RBAC</li>
+          <li>AWS Marketplace deploy</li>
+          <li>99.99% SLA</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="mailto:hello@vectorvaultai.com" class="btn-plan btn-plan-secondary">Contact Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section" id="waitlist">
+    <div class="cta-box">
+      <h2>Give your AI a<br /><span class="gradient-text">memory it keeps</span></h2>
+      <p>Join the waitlist and get early access + 3 months of Pro free.</p>
+      <div class="cta-input-row">
+        <input type="email" class="cta-input" placeholder="your@email.com" />
+        <button class="btn-primary" style="white-space:nowrap;padding:0.85rem 1.5rem;">Join Waitlist</button>
+      </div>
+      <p style="font-size:0.78rem;margin-top:1rem;color:var(--muted);">No spam. Unsubscribe anytime. 🔒</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo-sm">⬡ VectorVaultAI</div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#how">Docs</a>
+      <a href="mailto:hello@vectorvaultai.com">Contact</a>
+    </nav>
+    <p>© 2026 VectorVaultAI. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
