@@ -78,6 +78,7 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--text); }
 
     .nav-cta {
       background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -568,6 +569,216 @@
     .btn-plan-primary { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; }
     .btn-plan-secondary { background: transparent; border: 1px solid var(--border); color: var(--dim); }
 
+    /* ─── AGENT STUDIO ─── */
+    .agent-studio-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+    .agent-studio-inner {
+      background: linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(59,130,246,0.06) 100%);
+      border: 1px solid rgba(139,92,246,0.2);
+      border-radius: 24px;
+      padding: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .agent-studio-inner::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+    .studio-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+    @media(max-width: 900px) {
+      .studio-top { grid-template-columns: 1fr; gap: 2rem; }
+      .agent-studio-inner { padding: 2rem; }
+    }
+    .studio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.3);
+      border-radius: 100px;
+      padding: 0.3rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #a78bfa;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .studio-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .studio-desc {
+      color: var(--dim);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .studio-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .studio-feat {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.92rem;
+      color: var(--dim);
+    }
+    .studio-feat-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: rgba(139,92,246,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    /* ─── DRAG AND DROP CANVAS MOCKUP ─── */
+    .canvas-mockup {
+      background: #070d1a;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+    .canvas-titlebar {
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .canvas-titlebar .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .canvas-titlebar .dr { background: #ff5f57; }
+    .canvas-titlebar .dy { background: #febc2e; }
+    .canvas-titlebar .dg { background: #28c840; }
+    .canvas-titlebar span {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-left: 0.5rem;
+      font-family: monospace;
+    }
+    .canvas-body {
+      display: flex;
+      height: 320px;
+    }
+    .canvas-sidebar {
+      width: 110px;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 0.75rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .canvas-sidebar-label {
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .node-chip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 7px;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.65rem;
+      color: var(--dim);
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .node-chip:hover { background: rgba(255,255,255,0.07); border-color: rgba(139,92,246,0.3); }
+    .node-chip.violet { border-color: rgba(139,92,246,0.25); color: #c4b5fd; }
+    .node-chip.blue { border-color: rgba(59,130,246,0.25); color: #93c5fd; }
+    .node-chip.teal { border-color: rgba(20,184,166,0.25); color: #5eead4; }
+    .node-chip.pink { border-color: rgba(236,72,153,0.25); color: #f9a8d4; }
+    .canvas-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    /* Flow nodes on canvas */
+    .flow-node {
+      position: absolute;
+      background: var(--card);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.7rem;
+      color: var(--dim);
+      min-width: 100px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .flow-node .fn-title {
+      font-size: 0.68rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .flow-node .fn-sub { font-size: 0.6rem; color: var(--muted); }
+    .flow-node.active { border-color: rgba(139,92,246,0.6); box-shadow: 0 0 20px rgba(139,92,246,0.2); }
+    .flow-node.blue-node { border-color: rgba(59,130,246,0.5); }
+    .flow-node.green-node { border-color: rgba(52,211,153,0.5); }
+    .flow-node.teal-node { border-color: rgba(20,184,166,0.5); }
+    /* SVG connector lines */
+    .canvas-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    /* Enterprise badges row */
+    .studio-enterprise-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .ent-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: var(--dim);
+    }
+    .ent-badge span { font-size: 0.9rem; }
+
     /* ─── AWS BADGE ─── */
     .aws-banner {
       display: flex;
@@ -722,6 +933,7 @@
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#how">How it works</a>
+      <a href="#agent-studio">Agent Studio</a>
       <a href="#pricing">Pricing</a>
       <a href="docs.html">Docs</a>
       <a href="#waitlist" class="nav-cta">Get Early Access →</a>
@@ -904,6 +1116,153 @@
       </div>
     </div>
   </section>
+
+  <!-- AGENT STUDIO -->
+  <div class="agent-studio-section" id="agent-studio">
+    <div class="agent-studio-inner">
+      <div class="studio-top">
+
+        <!-- Left: copy -->
+        <div>
+          <div class="studio-badge">✦ New · Agent Studio</div>
+          <h2 class="studio-title">
+            Build & Deploy AI Agents<br />
+            <span class="gradient-text">Without Writing a Line of Code</span>
+          </h2>
+          <p class="studio-desc">
+            VectorVaultAI Agent Studio gives enterprise teams a visual drag-and-drop canvas to design,
+            connect, and deploy production-ready AI agents — powered by your own data and memory.
+          </p>
+          <div class="studio-features">
+            <div class="studio-feat">
+              <div class="studio-feat-icon">🧩</div>
+              <span>Drag-and-drop node canvas — connect triggers, memory, LLMs, and actions visually</span>
+            </div>
+            <div class="studio-feat">
+              <div class="studio-feat-icon">🧠</div>
+              <span>Built-in VectorVaultAI memory — every agent remembers context across sessions</span>
+            </div>
+            <div class="studio-feat">
+              <div class="studio-feat-icon">🚀</div>
+              <span>One-click deploy to cloud, on-prem, or AWS Marketplace</span>
+            </div>
+            <div class="studio-feat">
+              <div class="studio-feat-icon">🔒</div>
+              <span>Enterprise-grade SSO, RBAC, audit logs, and VPC isolation</span>
+            </div>
+            <div class="studio-feat">
+              <div class="studio-feat-icon">🔌</div>
+              <span>Pre-built connectors — Slack, Salesforce, Jira, ServiceNow, and more</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <a href="#waitlist" class="btn-primary" style="font-size:0.9rem;padding:0.75rem 1.5rem;">Request Enterprise Demo →</a>
+            <a href="docs.html" class="btn-secondary" style="font-size:0.9rem;padding:0.75rem 1.5rem;">View Docs</a>
+          </div>
+        </div>
+
+        <!-- Right: drag-and-drop canvas mockup -->
+        <div class="canvas-mockup">
+          <div class="canvas-titlebar">
+            <span class="dot dr"></span>
+            <span class="dot dy"></span>
+            <span class="dot dg"></span>
+            <span>Agent Studio — Support Bot v2</span>
+          </div>
+          <div class="canvas-body">
+
+            <!-- Node palette sidebar -->
+            <div class="canvas-sidebar">
+              <div class="canvas-sidebar-label">Nodes</div>
+              <div class="node-chip violet">⚡ Trigger</div>
+              <div class="node-chip blue">🧠 Memory</div>
+              <div class="node-chip teal">🤖 LLM</div>
+              <div class="node-chip pink">📤 Action</div>
+              <div class="node-chip">🔌 Slack</div>
+              <div class="node-chip">📊 CRM</div>
+              <div class="node-chip">🗂 Jira</div>
+              <div class="node-chip">📧 Email</div>
+            </div>
+
+            <!-- Canvas area with nodes and connectors -->
+            <div class="canvas-area">
+              <svg class="canvas-svg">
+                <!-- Connector lines -->
+                <path d="M 148 70 C 175 70, 175 95, 200 95" stroke="rgba(139,92,246,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+                <path d="M 148 70 C 175 70, 175 145, 200 145" stroke="rgba(59,130,246,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+                <path d="M 315 95 C 345 95, 345 120, 370 120" stroke="rgba(20,184,166,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+                <path d="M 315 145 C 345 145, 345 120, 370 120" stroke="rgba(20,184,166,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+                <path d="M 485 120 C 515 120, 515 80, 540 80" stroke="rgba(52,211,153,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+                <path d="M 485 120 C 515 120, 515 200, 540 200" stroke="rgba(248,113,113,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+                <!-- Animated dot on line -->
+                <circle r="3" fill="#a78bfa" opacity="0.8">
+                  <animateMotion dur="3s" repeatCount="indefinite" path="M 148 70 C 175 70, 175 95, 200 95"/>
+                </circle>
+                <circle r="3" fill="#60a5fa" opacity="0.8">
+                  <animateMotion dur="4s" repeatCount="indefinite" path="M 315 95 C 345 95, 345 120, 370 120"/>
+                </circle>
+                <circle r="3" fill="#34d399" opacity="0.8">
+                  <animateMotion dur="3.5s" repeatCount="indefinite" path="M 485 120 C 515 120, 515 80, 540 80"/>
+                </circle>
+              </svg>
+
+              <!-- Trigger node -->
+              <div class="flow-node active" style="left:18px;top:45px;min-width:115px;">
+                <div class="fn-title"><span>⚡</span> <span style="color:#a78bfa">User Message</span></div>
+                <div class="fn-sub">Slack / API / Web</div>
+              </div>
+
+              <!-- Memory node -->
+              <div class="flow-node blue-node" style="left:200px;top:70px;min-width:110px;">
+                <div class="fn-title"><span>🧠</span> <span style="color:#93c5fd">Recall Memory</span></div>
+                <div class="fn-sub">top_k=5, user ns</div>
+              </div>
+
+              <!-- Context node -->
+              <div class="flow-node" style="left:200px;top:122px;min-width:110px;">
+                <div class="fn-title"><span>📋</span> <span>Load Context</span></div>
+                <div class="fn-sub">CRM + ticket data</div>
+              </div>
+
+              <!-- LLM node -->
+              <div class="flow-node teal-node" style="left:370px;top:95px;min-width:110px;">
+                <div class="fn-title"><span>🤖</span> <span style="color:#5eead4">GPT-4o</span></div>
+                <div class="fn-sub">system + memory ctx</div>
+              </div>
+
+              <!-- Output nodes -->
+              <div class="flow-node green-node" style="left:540px;top:55px;min-width:105px;">
+                <div class="fn-title"><span>💬</span> <span style="color:#86efac">Reply</span></div>
+                <div class="fn-sub">Send to Slack</div>
+              </div>
+
+              <div class="flow-node" style="left:540px;top:175px;min-width:105px;border-color:rgba(248,113,113,0.4);">
+                <div class="fn-title"><span>📌</span> <span style="color:#fca5a5">Save Memory</span></div>
+                <div class="fn-sub">vault.remember()</div>
+              </div>
+
+              <!-- Running indicator -->
+              <div style="position:absolute;bottom:12px;right:12px;display:flex;align-items:center;gap:0.4rem;font-size:0.65rem;color:#34d399;">
+                <span style="width:6px;height:6px;background:#34d399;border-radius:50%;animation:pulse 2s infinite;display:inline-block;"></span>
+                Agent running · 142ms avg
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Enterprise badges row -->
+      <div class="studio-enterprise-row">
+        <div class="ent-badge"><span>🏢</span> Enterprise-ready</div>
+        <div class="ent-badge"><span>🔐</span> SOC 2 Type II (in progress)</div>
+        <div class="ent-badge"><span>☁️</span> AWS Marketplace (coming soon)</div>
+        <div class="ent-badge"><span>🔑</span> SSO / SAML</div>
+        <div class="ent-badge"><span>📊</span> Audit Logs</div>
+        <div class="ent-badge"><span>🌐</span> VPC Deployment</div>
+      </div>
+    </div>
+  </div>
 
   <!-- PRICING -->
   <section id="pricing" style="max-width:100%;padding:5rem 2rem;">
