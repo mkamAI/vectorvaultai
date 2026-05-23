@@ -1326,23 +1326,14 @@
 
       <!--
         MAILCHIMP FORM SETUP:
-        1. Go to mailchimp.com → Audience → Signup forms → Embedded forms
-        2. Copy your form action URL (looks like https://xxxxx.us21.list-manage.com/subscribe/post?u=XXX&id=XXX)
-        3. Replace the action URL below with yours
+        Mailchimp waitlist — opens Mailchimp signup page in new tab
       -->
       <form
-        action="https://YOUR_MAILCHIMP_FORM_ACTION_URL"
-        method="post"
-        target="_blank"
         onsubmit="handleWaitlist(event)"
         style="position:relative;"
       >
-        <!-- Mailchimp hidden bot field — do not remove -->
-        <div style="position:absolute;left:-5000px;" aria-hidden="true">
-          <input type="text" name="b_PLACEHOLDER_u_PLACEHOLDER_id" tabindex="-1" value="" />
-        </div>
         <div class="cta-input-row">
-          <input type="email" name="EMAIL" class="cta-input" placeholder="your@email.com" required />
+          <input type="email" id="waitlist-email" class="cta-input" placeholder="your@email.com" required />
           <button type="submit" class="btn-primary" style="white-space:nowrap;padding:0.85rem 1.5rem;">Join Waitlist →</button>
         </div>
       </form>
@@ -1356,11 +1347,14 @@
 
   <script>
     function handleWaitlist(e) {
-      // Show success message after short delay (Mailchimp opens in new tab)
-      setTimeout(() => {
-        document.getElementById('waitlist-success').style.display = 'block';
-        e.target.reset();
-      }, 500);
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      const mcUrl = 'http://eepurl.com/MeXtc1dkPv';
+      window.open(mcUrl, '_blank');
+      document.getElementById('waitlist-success').style.display = 'block';
+      document.getElementById('waitlist-email').value = '';
+      // GA4 event
+      if (typeof gtag !== 'undefined') gtag('event', 'waitlist_signup', { email_domain: email.split('@')[1] });
     }
   </script>
 
